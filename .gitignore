@@ -1,3 +1,5 @@
+# Ignore the HF Space clone subfolder (has its own .git)
+ChemCopilot/
 .env
 .env.example
 .venv/
