@@ -1,0 +1,12 @@
+.env
+.env.example
+.venv/
+__pycache__/
+*.pyc
+.streamlit/secrets.toml
+sample_docs/*.pdf
+ingest/check_deps.py
+*.egg-info/
+dist/
+build/
+.pytest_cache/
