@@ -1,13 +1,3 @@
----
-title: ChemCopilot
-emoji: ⚗️
-colorFrom: blue
-colorTo: red
-sdk: docker
-app_port: 7860
-pinned: false
----
-
 # ⚗️ ChemCopilot — AI Chemical Process Engineering Assistant
 
 ![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)
