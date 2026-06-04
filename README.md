@@ -15,12 +15,17 @@ pinned: false
 ![NVIDIA NIM](https://img.shields.io/badge/NVIDIA_NIM-LLaMA_3.1_70B-76B900?style=for-the-badge&logo=nvidia&logoColor=white)
 ![FAISS](https://img.shields.io/badge/FAISS-Vector_Search-0467DF?style=for-the-badge&logo=meta&logoColor=white)
 ![LangChain](https://img.shields.io/badge/LangChain-0.2-1C3C3C?style=for-the-badge)
+[![🤗 Live Demo](https://img.shields.io/badge/🤗%20Hugging%20Face-Live%20Demo-FFD21E?style=for-the-badge)](https://huggingface.co/spaces/Chandrakant2121/ChemCopilot)
 
 > **ChemCopilot** is a RAG-powered AI assistant for chemical process engineering. It retrieves 
 > context from your textbooks (PDFs), augments queries with domain knowledge, and delivers 
 > structured engineering solutions with LaTeX equations, unit tracking, and citation references.
 
-![ChemCopilot Screenshot](https://drive.google.com/file/d/1JC3Eg1iRf0Y9GC8I542V5wVWtdGrcEFm/view?usp=sharing)
+## 🌐 Live Demo
+
+🚀 **Try it now:** [https://huggingface.co/spaces/Chandrakant2121/ChemCopilot](https://huggingface.co/spaces/Chandrakant2121/ChemCopilot)
+
+![ChemCopilot Screenshot](screenshot.jpeg)
 
 ---
 
