@@ -75,11 +75,9 @@ def get_engineering_response(
     Raises:
         Catches API errors internally and returns error messages.
     """
-    # Step 1: Retrieve context
     docs = retrieve_context(user_query, vectorstore, k=6, topic_filter=topic_filter)
     context = format_context(docs)
 
-    # Step 2: Build augmented prompt
     augmented_prompt = f"""Use the following textbook excerpts as your primary reference.
 If the excerpts are insufficient, supplement with your general ChemE knowledge but flag it clearly.
 
@@ -91,14 +89,12 @@ ENGINEERING QUESTION:
 
 Provide a complete, structured engineering solution following the format in your instructions."""
 
-    # Step 3: Build message list (include chat history for multi-turn)
     messages = []
     if chat_history:
-        for turn in chat_history[-6:]:  # Keep last 3 exchanges (6 messages)
+        for turn in chat_history[-6:]:
             messages.append(turn)
     messages.append({"role": "user", "content": augmented_prompt})
 
-    # Step 4: Call NVIDIA NIM
     try:
         response = _get_client().chat.completions.create(
             model=MODEL,

@@ -24,7 +24,6 @@ def extract_text_from_pdf(pdf_path: str) -> dict:
 
     for i, page in enumerate(reader.pages):
         raw = page.extract_text() or ""
-        # Clean up hyphenation and extra whitespace
         raw = re.sub(r'-\n', '', raw)
         raw = re.sub(r'\n+', '\n', raw)
         raw = re.sub(r' +', ' ', raw)

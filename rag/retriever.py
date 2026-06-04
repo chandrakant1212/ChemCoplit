@@ -9,7 +9,6 @@ from langchain_huggingface import HuggingFaceEmbeddings
 import streamlit as st
 
 INDEX_FOLDER = "knowledge_base"
-# Must match the model used in build_index.py
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 
 

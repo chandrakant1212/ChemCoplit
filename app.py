@@ -18,13 +18,7 @@ from calculations.reactor_design import cstr_volume, pfr_volume_nth_order
 
 load_dotenv()
 
-# ── HF Spaces: secrets are injected as env vars automatically ──
-# No extra handling needed — os.getenv("NVIDIA_NIM_API_KEY") works for both
-# local (.env file via python-dotenv) and HF Spaces (Settings → Secrets)
 
-# ─────────────────────────────────────────────────────────────
-# Page Configuration
-# ─────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="ChemCopilot",
     page_icon="⚗️",
@@ -32,9 +26,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ─────────────────────────────────────────────────────────────
-# Custom CSS — dark engineering aesthetic
-# ─────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -159,9 +150,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ─────────────────────────────────────────────────────────────
-# Session State Initialization
-# ─────────────────────────────────────────────────────────────
 if "messages" not in st.session_state:
     st.session_state.messages = []
 if "last_query" not in st.session_state:
@@ -171,17 +159,10 @@ if "calc_results" not in st.session_state:
 if "last_retrieved_docs" not in st.session_state:
     st.session_state.last_retrieved_docs = []
 
-# ─────────────────────────────────────────────────────────────
-# Load Knowledge Base (cached)
-# ─────────────────────────────────────────────────────────────
 vectorstore = load_vectorstore()
 kb_ready = vectorstore is not None
 
-# ─────────────────────────────────────────────────────────────
-# SIDEBAR
-# ─────────────────────────────────────────────────────────────
 with st.sidebar:
-    # --- Branding ---
     st.markdown("""
     <div class="sidebar-brand">
         <h2>⚗️ ChemCopilot</h2>
@@ -191,7 +172,6 @@ with st.sidebar:
 
     st.divider()
 
-    # --- Topic Filter ---
     topic_filter = st.selectbox(
         "🔍 Topic Filter",
         options=[
@@ -209,11 +189,9 @@ with st.sidebar:
 
     st.divider()
 
-    # --- Quick Calculations ---
     with st.expander("🧮 Quick Calculations", expanded=False):
         calc_tab1, calc_tab2, calc_tab3 = st.tabs(["Fluidization", "Heat Exchanger", "Reactor"])
 
-        # ═══════ TAB 1: Fluidization ═══════
         with calc_tab1:
             st.markdown("##### Minimum Fluidization & Terminal Velocity")
             fl_dp = st.number_input("Particle diameter dp (µm)", value=300.0, min_value=1.0,
@@ -226,7 +204,7 @@ with st.sidebar:
                                     step=1e-6, format="%.2e", key="fl_mu")
 
             if st.button("Calculate Umf & Ut", key="btn_fluid", use_container_width=True):
-                dp_m = fl_dp * 1e-6  # µm → m
+                dp_m = fl_dp * 1e-6
                 try:
                     umf_result = calc_umf_wen_yu(dp_m, fl_rho_p, fl_rho_g, fl_mu)
                     ut_result = calc_terminal_velocity(dp_m, fl_rho_p, fl_rho_g, fl_mu)
@@ -269,7 +247,6 @@ with st.sidebar:
                 except Exception as e:
                     st.error(f"Calculation error: {e}")
 
-        # ═══════ TAB 2: Heat Exchanger ═══════
         with calc_tab2:
             st.markdown("##### LMTD & Area Sizing")
             hx_Thi = st.number_input("T_hot_in (°C)", value=180.0, key="hx_thi")
@@ -290,7 +267,7 @@ with st.sidebar:
                         st.error(lmtd_res["error"])
                     else:
                         area_res = calc_heat_exchanger_area(
-                            Q_W=hx_Q * 1000,  # kW → W
+                            Q_W=hx_Q * 1000,
                             U_Wm2K=hx_U,
                             lmtd_K=lmtd_res["LMTD_K"]
                         )
@@ -314,7 +291,6 @@ with st.sidebar:
                 except Exception as e:
                     st.error(f"Calculation error: {e}")
 
-        # ═══════ TAB 3: Reactor ═══════
         with calc_tab3:
             st.markdown("##### CSTR / PFR Volume")
             rx_type = st.radio("Reactor type", ["CSTR", "PFR"], index=0,
@@ -364,7 +340,6 @@ with st.sidebar:
 
     st.divider()
 
-    # --- Example Queries ---
     st.markdown("##### 💡 Example Queries")
 
     example_queries = [
@@ -382,7 +357,6 @@ with st.sidebar:
 
     st.divider()
 
-    # --- Knowledge Base Status ---
     st.markdown("##### 📦 Knowledge Base")
     if kb_ready:
         st.markdown("""<span class="status-badge status-ok">✅ Index loaded</span>""",
@@ -394,7 +368,6 @@ with st.sidebar:
 
     st.divider()
 
-    # --- Clear Conversation ---
     if st.button("🗑️ Clear Conversation", use_container_width=True, key="btn_clear"):
         st.session_state.messages = []
         st.session_state.last_query = ""
@@ -403,11 +376,6 @@ with st.sidebar:
         st.rerun()
 
 
-# ─────────────────────────────────────────────────────────────
-# MAIN CONTENT AREA
-# ─────────────────────────────────────────────────────────────
-
-# --- Header Banner ---
 st.markdown("""
 <div class="main-header">
     <h1>⚗️ ChemCopilot</h1>
@@ -415,7 +383,6 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# --- Knowledge Base Warning ---
 if not kb_ready:
     st.warning(
         "⚠️ **Knowledge base not found.** The assistant will use general knowledge only.\n\n"
@@ -426,37 +393,29 @@ if not kb_ready:
         icon="📚"
     )
 
-# --- Chat History Display ---
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
-# --- Check for example query injection ---
 if st.session_state.last_query:
     injected_query = st.session_state.last_query
-    st.session_state.last_query = ""  # Clear to avoid re-triggering
+    st.session_state.last_query = ""
 else:
     injected_query = None
 
-# --- Chat Input ---
 user_input = st.chat_input("Ask a chemical engineering question...")
-
-# Use injected query if present, else use chat input
 query = injected_query or user_input
 
 if query:
-    # Append and display user message
     st.session_state.messages.append({"role": "user", "content": query})
     with st.chat_message("user"):
         st.markdown(query)
 
-    # Generate and display assistant response
     with st.chat_message("assistant"):
         with st.spinner("🔬 Retrieving from knowledge base & generating response..."):
             try:
-                # Build chat history for context (last 6 messages)
                 chat_history = []
-                for m in st.session_state.messages[-7:-1]:  # Exclude the current query
+                for m in st.session_state.messages[-7:-1]:
                     chat_history.append({"role": m["role"], "content": m["content"]})
 
                 response_text, retrieved_docs = get_engineering_response(
@@ -475,10 +434,8 @@ if query:
                 retrieved_docs = []
                 st.session_state.last_retrieved_docs = []
 
-    # Save assistant response
     st.session_state.messages.append({"role": "assistant", "content": response_text})
 
-    # Show retrieved sources
     if st.session_state.last_retrieved_docs:
         with st.expander("📚 Retrieved Sources", expanded=False):
             for i, doc in enumerate(st.session_state.last_retrieved_docs, 1):
