@@ -20,7 +20,7 @@ pinned: false
 > context from your textbooks (PDFs), augments queries with domain knowledge, and delivers 
 > structured engineering solutions with LaTeX equations, unit tracking, and citation references.
 
-![ChemCopilot Screenshot](https://via.placeholder.com/900x450?text=ChemCopilot+Screenshot)
+![ChemCopilot Screenshot](https://drive.google.com/file/d/1JC3Eg1iRf0Y9GC8I542V5wVWtdGrcEFm/view?usp=sharing)
 
 ---
 
@@ -164,57 +164,6 @@ chemcopilot/
 | **PDF Parsing** | pypdf 4.2 |
 
 ---
-
-## 🚢 Deployment on Hugging Face Spaces
-
-### Step 1: Create a Hugging Face Space
-
-1. Go to [huggingface.co/new-space](https://huggingface.co/new-space)
-2. Name your Space (e.g., `chemcopilot`)
-3. Select **Docker** as the SDK
-4. Choose **Blank** Docker template
-5. Set visibility to **Public** (or Private)
-6. Click **Create Space**
-
-### Step 2: Set up Git LFS and push
-
-```bash
-# Install Git LFS (one-time)
-git lfs install
-
-# Initialize repo and add HF Spaces remote
-cd chemcopilot
-git init
-git remote add space https://huggingface.co/spaces/YOUR_USERNAME/chemcopilot
-
-# Track large knowledge base files with LFS
-git lfs track "knowledge_base/index.faiss"
-git lfs track "knowledge_base/index.pkl"
-
-# Add all files and push
-git add .
-git commit -m "Initial deployment to HF Spaces"
-git push space main
-```
-
-> **Important:** Make sure your `knowledge_base/index.faiss` and `knowledge_base/index.pkl`
-> files are built locally first (`python ingest/build_index.py`) before pushing.
-
-### Step 3: Add your API key as a Secret
-
-1. Go to your Space → **Settings** → **Variables and secrets**
-2. Click **New secret**
-3. Name: `NVIDIA_NIM_API_KEY`
-4. Value: your NVIDIA NIM API key
-5. Save — the Space will rebuild automatically
-
-### Step 4: Verify
-
-The Space will build the Docker image and deploy. This takes ~5-10 minutes.
-Once live, your app will be available at:
-```
-https://huggingface.co/spaces/YOUR_USERNAME/chemcopilot
-```
 
 ---
 
